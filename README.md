@@ -1,11 +1,8 @@
 ## 一、项目描述
 
-- 一个基于 Vue、Datav、Echart 框架的 " **数据大屏项目** "，通过 Vue 组件实现数据动态刷新渲染，内部图表可实现自由替换。部分图表使用 DataV 自带组件，可进行更改，详情请点击下方 DataV 文档。
-- 项目需要全屏展示（按 F11）。
+- 一个基于 Vue、Datav、Echart 框架的 " **数据大屏项目** "，由于是从公司内部项目中剥离出来的，所以后端方面的数据请求都去除了，大屏的一些数据联动效果保留了其中一部分。
+- 项目在做中国地图时最开始接入的是阿里旗下的高德地图开发，后来因为种种原因改为了百度的Echarts中国地图，并且做到了省市县的联动下钻。
 - 项目部分区域使用了全局注册方式，增加了打包体积，在实际运用中请使用 **按需引入**。
-- 拉取项目之后，建议按照自己的功能区域重命名文件，现以简单的位置进行区分。
-- 项目环境：Vue-cli-3.0、Webpack-4.0、Npm-6.13、Node-v12.16。
-- 请拉取 master 分支的代码，其余是开发分支。
 
 友情链接：
 
@@ -19,73 +16,19 @@
 | 文件                | 作用/功能                                                              |
 | ------------------- | --------------------------------------------------------------------- |
 | main.js             | 主目录文件，引入 Echart/DataV 等文件                                    |
-| utils               | 工具函数与 mixins 函数等                                                |
+| utils               | 工具函数                                              |
 | views/ index.vue    | 项目主结构                                                             |
 | views/其余文件       | 界面各个区域组件（按照位置来命名）                                       |
 | assets              | 静态资源目录，放置 logo 与背景图片                                       |
-| assets / style.scss | 通用 CSS 文件，全局项目快捷样式调节                                      |
-| assets / index.scss | Index 界面的 CSS 文件                                                  |
-| components/echart   | 所有 echart 图表（按照位置来命名）                                      |
-| common/...          | 全局封装的 ECharts 和 flexible 插件代码（适配屏幕尺寸，可定制化修改）     |
 
 ## 三、使用介绍
 
 ### 启动项目
 
-需要提前安装好 `nodejs` 与 `npm`,下载项目后在项目主目录下运行 `npm/cnpm install` 拉取依赖包。安装完依赖包之后然后使用 `vue-cli` 或者直接使用命令`npm run serve`，就可以启动项目，启动项目后需要手动全屏（按 F11）。如果编译项目的时候提示没有 DataV 框架的依赖，输入 `npm install @jiaminghi/data-view` 或者 `yarn add @jiaminghi/data-view` 进行手动安装。
+node -v v12.16.1
 
-### 封装组件渲染图表
+npm -v 6.13.4
 
-所有的 ECharts 图表都是基于 `common/echart/index.vue` 封装组件创建的，已经对数据和屏幕改动进行了监听，能够动态渲染图表数据和大小。在监听窗口小大的模块，使用了防抖函数来控制更新频率，节约浏览器性能。
+需要提前安装好 `nodejs` 与 `npm`,下载项目后在项目主目录下运行 `npm/cnpm install` 拉取依赖包。安装完依赖包之后然后使用 `vue-cli` 或者直接使用命令`npm run serve`，就可以启动项目。
 
-项目配置了默认的 ECharts 图表样式，文件地址：`common/echart/theme.json`。
-
-封装的渲染图表组件支持传入以下参数，可根据业务需求自行添加/删除。
-
-参数名称              | 类型      | 作用/功能                      |
-| -------------------| --------- | ------------------------------|
-| id                 | String    | 唯一 id，渲染图表的节点         |
-| className          | String    | class样式名称                  |
-| options            | Object    | ECharts 配置                   |
-| height             | String    | 图表高度                       |
-| width              | String    | 图表宽度                       |
-
-### 动态渲染图表
-
-```
-### 更换边框
-
-边框是使用了 DataV 自带的组件，只需要去 views 目录下去寻找对应的位置去查找并替换就可以，具体的种类请去 DavaV 官网查看
-如：
-
-```html
-<dv-border-box-1></dv-border-box-1>
-<dv-border-box-2></dv-border-box-2>
-<dv-border-box-3></dv-border-box-3>
-```
-
-
-### Mixins 解决自适应适配功能
-
-使用 mixins 注入解决了界面大小变动图表自适应适配的功能，函数在 `utils/resizeMixins.js` 中，应用在 `common/echart/index.vue` 的封装渲染组件，主要是对 `this.chart` 进行了功能注入。
-
-### 屏幕适配
-
-本项目借助了 flexible 插件，通过改变 rem 的值来进行适配，原设计为 1920px。 ，适配区间为：1366px ~ 2560px，本项目有根据实际情况进行源文件的更改，小屏幕（如:宽为 1366px）需要自己舍弃部分动态组件进行适配，如'动态文字变换组件'会影响布局，需要手动换成一般节点，
-
-```js
-// flexible文件位置: `common/flexible.js`,修改部分如下
-function refreshRem() {
-  var width = docEl.getBoundingClientRect().width;
-  // 最小1366px，最大适配2560px
-  if (width / dpr < 1366) {
-    width = 1366 * dpr;
-  } else if (width / dpr > 2560) {
-    width = 2560 * dpr;
-  }
-  // 原项目是1920px我设置成24等份，这样1rem就是80px
-  var rem = width / 24;
-  docEl.style.fontSize = rem + 'px';
-  flexible.rem = win.rem = rem;
-}
-```
+![](./public/readme.gif)

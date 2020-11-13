@@ -55,12 +55,12 @@
                             <div>
                                 <dv-border-box-11 :title="chinaMapTitle">
 <!--                                    echarts地图-->
-                                    <china
-                                            @map-change="mapClick"
-                                            @back-change="backClick"
-                                    />
+<!--                                    <china-->
+<!--                                            @map-change="mapClick"-->
+<!--                                            @back-change="backClick"-->
+<!--                                    />-->
 <!--                                    高德地图-->
-<!--                                    <china-gaode/>-->
+                                    <china-gaode/>
                                 </dv-border-box-11>
                             </div>
                             <div>
@@ -101,8 +101,8 @@
             centerForm,
             leftLevel,
             leftLoops,
-            china,
-            // chinaGaode,
+            // china,
+            chinaGaode,
             rightProvince,
             rightCounty,
         },

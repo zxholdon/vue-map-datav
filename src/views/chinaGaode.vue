@@ -62,7 +62,6 @@
         methods: {
             //地图点击事件
             echartsMapClick(params) {
-                this.$ba.trackEvent('echartsMap', '点击地图', `${params.data.name}-${params.data.areaCode}`);
                 if (params.data.level == 'street') return;
                 //清除地图上所有覆盖物
                 for (var i = 0, l = this.polygons.length; i < l; i++) {
@@ -244,7 +243,6 @@
                 var adcode = option.adcode;
                 this.areaName = keyword;
                 this.areaCode = adcode;
-                this.$ba.trackEvent('echartsMap', '筛选地图', `${this.areaName}-${this.areaCode}`);
                 this.district.setLevel(option.value); //行政区级别
                 this.district.setExtensions('all');
                 //行政区查询

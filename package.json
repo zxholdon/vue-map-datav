@@ -1,5 +1,5 @@
 {
-  "name": "big-screen-vue-datav",
+  "name": "vue-map-datav",
   "version": "1.0.1",
   "private": true,
   "scripts": {
@@ -12,15 +12,12 @@
     "@jiaminghi/data-view": "^2.7.3",
     "@types/echarts": "^4.4.3",
     "axios": "^0.21.0",
-    "babel-polyfill": "^6.26.0",
     "core-js": "^3.6.4",
     "echarts": "^4.6.0",
     "element-ui": "^2.14.0",
-    "es6-promise": "^4.2.8",
     "jquery": "^3.5.1",
     "vue": "^2.6.11",
     "vue-awesome": "^4.0.2",
-    "vue-ba": "^1.2.8",
     "vue-router": "^3.1.5",
     "vuex": "^3.1.2"
   },
