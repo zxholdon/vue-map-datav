@@ -1,6 +1,6 @@
 <template>
     <div id="index">
-                <dv-full-screen-container class="bg">
+        <dv-full-screen-container class="bg">
             <div class="dataweather">
                 <div>
                     {{dataWeather.city}}
@@ -18,64 +18,64 @@
             <div v-else class="host-body">
                 <top-header/>
                 <div class="body-box">
-                        <div class="content-box info-four">
-                            <div>
-                                <dv-border-box-8 class="bg-color-black" style="height: 1rem;padding: .2rem;">
-                                    <div class="topNumber">
-                                        <top-number/>
-                                        <top-number/>
-                                    </div>
-                                </dv-border-box-8>
-                            </div>
-                            <div>
-                                <dv-border-box-10 style="height: 1rem">
-                                    <center-form/>
-                                </dv-border-box-10>
-                            </div>
-                            <div>
-                                <dv-border-box-8 :reverse="true" class="bg-color-black"
-                                                 style="height: 1rem;padding: .2rem;">
-                                    <div class="topNumber topNumberRotate">
-                                        <top-number/>
-                                        <top-number/>
-                                    </div>
-                                </dv-border-box-8>
-                            </div>
+                    <div class="content-box info-four">
+                        <div>
+                            <dv-border-box-8 class="bg-color-black" style="height: 1rem;padding: .2rem;">
+                                <div class="topNumber">
+                                    <top-number/>
+                                    <top-number/>
+                                </div>
+                            </dv-border-box-8>
                         </div>
+                        <div>
+                            <dv-border-box-10 style="height: 1rem">
+                                <center-form/>
+                            </dv-border-box-10>
+                        </div>
+                        <div>
+                            <dv-border-box-8 :reverse="true" class="bg-color-black"
+                                             style="height: 1rem;padding: .2rem;">
+                                <div class="topNumber topNumberRotate">
+                                    <top-number/>
+                                    <top-number/>
+                                </div>
+                            </dv-border-box-8>
+                        </div>
+                    </div>
 
-                        <div class="content-box">
-                            <div>
-                                <dv-border-box-12>
-                                    <left-level :areaData="areaData"/>
-                                </dv-border-box-12>
-                                <dv-border-box-10>
-                                    <left-loops/>
-                                </dv-border-box-10>
-                            </div>
-                            <div>
-                                <dv-border-box-11 :title="chinaMapTitle">
-<!--                                    echarts地图-->
-<!--                                    <china-->
-<!--                                            @map-change="mapClick"-->
-<!--                                            @back-change="backClick"-->
-<!--                                    />-->
-<!--                                    高德地图-->
-                                    <china-gaode/>
-                                </dv-border-box-11>
-                            </div>
-                            <div>
-                                <dv-border-box-13>
-                                    <right-province/>
-                                </dv-border-box-13>
-                                <dv-border-box-12>
-                                    <right-county/>
-                                </dv-border-box-12>
-                            </div>
+                    <div class="content-box">
+                        <div>
+                            <dv-border-box-12>
+                                <left-level :areaData="areaData"/>
+                            </dv-border-box-12>
+                            <dv-border-box-10>
+                                <left-loops/>
+                            </dv-border-box-10>
                         </div>
+                        <div>
+                            <dv-border-box-11 :title="chinaMapTitle">
+                                <!--                                    echarts地图-->
+                                                                    <china
+                                                                            @map-change="mapClick"
+                                                                            @back-change="backClick"
+                                                                    />
+                                <!--                                    高德地图-->
+<!--                                <china-gaode/>-->
+                            </dv-border-box-11>
+                        </div>
+                        <div>
+                            <dv-border-box-13>
+                                <right-province/>
+                            </dv-border-box-13>
+                            <dv-border-box-12>
+                                <right-county/>
+                            </dv-border-box-12>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-                </dv-full-screen-container>
+        </dv-full-screen-container>
     </div>
 </template>
 
@@ -101,8 +101,8 @@
             centerForm,
             leftLevel,
             leftLoops,
-            // china,
-            chinaGaode,
+            china,
+            // chinaGaode,
             rightProvince,
             rightCounty,
         },
@@ -220,6 +220,7 @@
             left: 1.1rem;
             font-size: .22rem;
             color: #fff;
+
             img {
                 width: .3rem;
                 height: .3rem;

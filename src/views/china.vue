@@ -176,28 +176,24 @@
         width: 100%;
         height: 100%;
         position: relative;
+        .echarts {
+            width: 0;
+            flex: 1;
+            background-size: 100% 100%;
+            #map {
+                height: 100%;
+            }
+        }
+        .back {
+            position: absolute;
+            top: .8rem;
+            right: .5rem;
+            z-index: 999;
+            padding-left: .12rem;
+            padding-right: .12rem;
+
+        }
     }
-
-    #china_map_box .echarts {
-        width: 0;
-        flex: 1;
-        background-size: 100% 100%;
-    }
-
-    #china_map_box #map {
-        height: 100%;
-    }
-
-    .back {
-        position: absolute;
-        top: .8rem;
-        right: .5rem;
-        z-index: 999;
-        padding-left: .12rem;
-        padding-right: .12rem;
-
-    }
-
 
 </style>
 

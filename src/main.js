@@ -23,7 +23,7 @@ import '@/utils/flexible.js';
 // 引入全局css
 import './assets/scss/style.scss';
 
-Vue.use(ElementUI)
+Vue.use(ElementUI);
 
 //引入echart
 import echarts from 'echarts'
