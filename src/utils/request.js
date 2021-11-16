@@ -5,31 +5,25 @@ import qs from 'qs'
 // axios.defaults.baseURL = manage.apiHost;
 // import { getToken,clear } from '@/utils/auth'
 axios.defaults.timeout = 60 * 1000 * 10;
-// axios.defaults.cache = false
+axios.defaults.cache = false
+/*第一层if判断生产环境和开发环境*/
+if (process.env.NODE_ENV === 'production') {
+    /*第二层if，根据.env文件中的VUE_APP_FLAG判断是生产环境还是测试环境*/
+    if (process.env.VUE_APP_FLAG === 'pro') {
+        //production 生产环境
+        axios.defaults.baseURL = 'https://os.huixiaoan.com:8550';
+    } else {
+        //test 测试环境
+        axios.defaults.baseURL = 'http://127.0.0.1:8000';
+    }
+} else {
+    //dev 开发环境
+    axios.defaults.baseURL = 'http://127.0.0.1:8000';
+}
 
+let baseUrl = axios.defaults.baseURL;
 
-
-
-// console.log("当前环境",process.env.NODE_ENV);
-
-// /*第一层if判断生产环境和开发环境*/
-// if (process.env.NODE_ENV === 'production') {
-//     /*第二层if，根据.env文件中的VUE_APP_FLAG判断是生产环境还是测试环境*/
-//     if (process.env.VUE_APP_FLAG === 'pro') {
-//         //production 生产环境
-//         axios.defaults.baseURL = 'http://127.0.0.1:8080';
-//     } else {
-//         //test 测试环境
-//         axios.defaults.baseURL = 'http://127.0.0.1:8080';
-//     }
-// } else {
-//     //dev 开发环境
-//     // axios.defaults.baseURL = 'http://127.0.0.1:8080';
-// }
-//
-// let baseUrl = axios.defaults.baseURL;
-//
-// console.log("当前host：", baseUrl);
+console.log("当前host：", baseUrl);
 
 axios.interceptors.request.use(
     config => {
@@ -58,21 +52,22 @@ axios.interceptors.response.use(
 );
 
 function checkStatus(response) {
-    if (response.status === 200 || response.status === 304) {
-        return response['data'];
+
+    if (response.data.code === 0 || response.data.code === 304) {
+        return response.data.data;
     } else {
         throw new Error(response.data.message); // eslint-disable-line
     }
     throw new Error(response.statusText); // eslint-disable-line
 }
 
-export function request(config) {
-    return axios.request(config).then(checkStatus);
-}
-
 export function get(url, params) {
     // let queryData = Object.assign(params, {t: new Date().getTime()})
     return axios.get(url, {params}).then(checkStatus);
+}
+
+export function request(config) {
+  return axios.request(config).then(checkStatus);
 }
 
 export function delet(url, params) {

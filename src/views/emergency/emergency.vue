@@ -1,0 +1,476 @@
+<template>
+  <div id="index">
+    <dv-full-screen-container class="bg">
+      <div class="dataweather">
+        <div>
+          {{dataWeather.city}}
+          {{dataWeather.weathertemp}}
+          <img :src="dataWeather.icontemp" alt="">
+          {{dataWeather.peraturetemp}}
+        </div>
+      </div>
+      <div class="datatime">
+                <span>
+                    {{dataTime.dateYear}} {{dataTime.dateWeek}} {{dataTime.dateDay}}
+                </span>
+      </div>
+<!--      <dv-loading v-if="loading">Loading...</dv-loading>-->
+      <div  class="host-body">
+        <top-header/>
+        <div class="body-box">
+          <div class="content-box info-four">
+            <div>
+              <dv-border-box-8 class="bg-color-black" style="height: 1rem;padding: .2rem;">
+                <div class="topNumber">
+                  <top-number/>
+                  <top-numberl/>
+
+                </div>
+              </dv-border-box-8>
+            </div>
+            <div>
+              <dv-border-box-10 style="height: 1rem">
+                <div class="topNumber">
+                  <top-number2/>
+                  <top-numberend1/>
+                  <top-number2t/>
+                  <top-number2o/>
+                  <top-numberend2/>
+                </div>
+
+              </dv-border-box-10>
+            </div>
+            <div>
+              <dv-border-box-8 :reverse="true" class="bg-color-black"
+                               style="height: 1rem;padding: .2rem;">
+                <div class="topNumber ">
+                  <top-Numberr1/>
+                  <top-Numberr2/>
+                </div>
+              </dv-border-box-8>
+            </div>
+          </div>
+
+          <div class="content-box">
+            <div>
+              <!--                          // left-one-->
+              <dv-border-box-12>
+                <left-level :areaData="areaData"/>
+              </dv-border-box-12>
+              <!--                          // left-two-->
+              <dv-border-box-10>
+                <left-loops/>
+              </dv-border-box-10>
+            </div>
+            <div>
+
+              <!--                          // center-->
+              <dv-border-box-11 :title="chinaMapTitle">
+
+                <div style="width: 100%;height: 100%" class="amp-demo">
+                  <el-amap style="width: 100%;height: 100%" vid="amap" :zoom="zoom" :map-style="mapStyle" :center="center" class="amap-demo" v-if="reFresh">
+
+                    <!--                                  <el-amap-marker :position="marker3.position" :visible="marker3.visible" :draggable="marker3.draggable" vid="index2" :events="events2" :icon="marker3.icon2"></el-amap-marker>-->
+                    <!--                                  <el-amap-marker :position="marker4.position" :visible="marker4.visible" :draggable="marker4.draggable"  vid="index2" :events="events2" :icon="marker3.icon2"></el-amap-marker>-->
+                    <el-amap-marker v-for="(marker,index) in markers" :key="index"   :events="marker.events"   :icon="marker.icon2"  :position="marker.position"  />
+                    <el-amap-info-window
+                      v-if="window"
+                      :position="window.position"
+                      :visible="window.visible"
+                      :content="window.content"
+                    ></el-amap-info-window>
+
+                    <el-amap-polygon
+                      v-for="polygon in polygons"
+                      :path="polygon.path"
+                      editable="true"
+                      strokeStyle="dashed"
+                      strokeColor="#FF0000"
+                      strokeWeight="2"
+                      strokeOpacity="0.8"
+                      fillOpacity="0.3"
+                      fillColor="#1791fc"
+                      :key="polygon.index"
+                    ></el-amap-polygon>
+
+                  </el-amap>
+                  <el-amap-info-window
+                    v-for="window in windows"
+                    :offset="window.offset"
+                    :position="window.position"
+                    :content="window.content"
+                    :open="window.open"
+                    :key="window.index"
+                  ></el-amap-info-window>
+
+
+                </div>
+
+              </dv-border-box-11>
+            </div>
+            <div>
+              <!--                          // right-one-->
+              <dv-border-box-13>
+                <right-province/>
+              </dv-border-box-13>
+              <!--                          // right-two-->
+              <dv-border-box-12>
+                <right-county/>
+              </dv-border-box-12>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </dv-full-screen-container>
+  </div>
+</template>
+<style>
+.frame .textstyle {
+  font-size: 20px;
+  margin-top: 15px;
+  margin-left: 30px;
+}
+
+
+
+.diss{
+
+  display: block;
+  padding-bottom: 30px;
+  font-size: 15px;
+}
+
+</style>
+
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=25d6a2c55d31e2b5e4d47df5bd849426"></script>
+<script src="//webapi.amap.com/ui/1.1/main.js?v=1.1.1"></script>
+<script>
+import {formatTime} from '../../utils'
+import cny from '../../assets/cm.png'
+import cny2 from '../../assets/cm.svg'
+import topHeader from "../mainpage/topHeader";
+import topNumber from "../mainpage/topNumber"
+import topNumber2 from "../mainpage/topNumber2"
+import topNumberl from "../mainpage/topNumberl"
+import topNumber2o from "../mainpage/topNumber2o";
+import topNumber2t from "../mainpage/topNumber2t"
+import topNumberend1 from "../mainpage/topNumberend1";
+import topNumberend2 from "../mainpage/topNumberend2";
+import topNumberr1 from "../mainpage/topNumberr1";
+import topNumberr2 from "../mainpage/topNumberr2";
+import centerForm from "./centerForm"
+import leftLevel from "./leftLevel"
+import leftLoops from "./leftLoops"
+import china from "./china"
+import chinaGaode from "./chinaGaode"
+import rightProvince from "./rightProvince"
+import rightCounty from "./rightCounty"
+import {weatherOption} from '../../config/weatherOption'
+import viDss from "../../comments/centervideos";
+import serviceDialog from "../../comments/serviceDialog"
+import {get} from "../../utils/request";
+
+export default {
+
+  name: "emergency",
+  components: {
+    topHeader,
+    topNumber,
+    topNumber2,
+    topNumber2o,
+    topNumber2t,
+    topNumberend1,
+    topNumberend2,
+    topNumberr1,
+    topNumberr2,
+    // centerForm,
+    leftLevel,
+    leftLoops,
+    china,
+    topNumberl,
+    // chinaGaode,
+    rightProvince,
+    rightCounty,
+    viDss,
+    serviceDialog,
+  },
+  data() {
+    return {
+      lonlat: [[106.825997,29.571588],[106.799174,29.569309],[106.813507,29.556169],[106.976621,29.754649]], //经纬度
+      markers: [], //点
+      windows: [], //弹窗
+      polygons:[],
+      window: "", //弹窗的显示影藏
+      show:false,
+      gridData: [{
+        date: '麻柳制药厂',
+        name: '一般风险',
+        address: '王小虎'
+      }],
+      dialogTableVisible:false,
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      formLabelWidth: '120px',
+      events: {
+        click: a => {
+          // console.log(a.target.F.position.O)
+          //  console.log(a.target.F.position.P)
+          // console.log( a.target.F.extData)
+
+          this.dialogTableVisible = true
+          this.form.userName = 'allS.userName'
+          this.form.telephone = 'allS.telephone'
+          this.form.plateNumber = 'allS.plateNumber'
+          this.form.loginTime = 'allS.loginTime'
+          this.form.longitude = 'allS.longitude'
+          this.form.latitude = 'allS.latitude'
+
+        }
+      },
+      events2:{
+        click: a => {
+        }
+      },
+
+      reFresh:true,
+      loading: true,
+      dataTime: {
+        dateDay: null,
+        dateYear: null,
+        dateWeek: null,
+        weekday: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+      },
+      dataWeather: {
+        city: '重庆市',
+        dayweather: '晴',
+        nightweather: '多云',
+        weathertemp: '晴', // 根据时间判断选白天还是晚上的天气
+        nighttemp: '3℃',
+        daytemp: '15℃',
+        peraturetemp: '3℃~15℃', // 根据时间判断选白天还是晚上的温度
+        icontemp: 'https://cdn.heweather.com/cond_icon/100.png',
+      },
+      areaData: {
+        areaCode: "000000",
+        areaLevel: "county",
+        name: "中国",
+        areaName: "生物城",
+      },
+
+      slotStyle: {
+        padding: '2px 8px',
+        background: '#eee',
+        color: '#333',
+        border: '1px solid #aaa'
+      },
+      zoom: 12,
+      mapStyle:'dark',
+      center: [106.840064,29.65893],
+
+      road1:{},
+
+
+      polyline: {
+      },
+
+    }
+
+  },
+  computed: {
+    chinaMapTitle() {
+      let areaName = this.areaData.areaName;
+      if (areaName === 'china') {
+        areaName = '生物城'
+      }
+      return areaName;
+    }
+  },
+  created() {
+    this.getDateTime();
+    this.cancelLoading();
+    this.requestGetWeather();
+  },
+  mounted() {
+    let url = '/bigdata/emergencypeoplearea'
+    get(url).then(res=> {
+
+      let markers = [];
+      let windows = [];
+      let polygons = [];
+      let self = this; //this重定向
+
+      for (let i = 0; i < res.length; i++) {
+        console.info(res[i].center)
+        windows.push({
+          position:  res[i].center,
+          content: '',
+          visible: false,
+
+        });
+        //点
+        markers.push({
+          position:  res[i].center,
+          icon2: require("../../../public/static/images/people1.png"),
+          events: {
+            click() {
+              //弹窗信息
+              console.info('2222')
+              self.windows[i].content =
+                `<div>
+                  <div><span style="font-size: 18px;color: green">应急负责人</span><span style="color: green;font-size: 16px"></span></div>
+                  <div><span style="font-size: 14px;color: black">姓名:</span><span style="color: black;font-size: 14px">`+res[i].people+`</span></div>
+                  <div><span style="font-size: 14px;color: black">联系电话:</span><span style="color: black;font-size: 14px">`+res[i].phone+`</span></div>
+
+
+                </div>`;
+              //给信息窗体里的判断默认传false默认不显示
+              self.windows.forEach((window) => {
+                window.visible = false;
+              });
+
+              //当前点击的圆点对应的信息窗体为true显示
+              self.window = self.windows[i];
+              self.$nextTick(() => {
+                self.window.visible = true;
+              });
+              console.info(window.visible)
+              console.info(self.window.visible)
+            },
+          },
+        });
+      }
+      for (let i = 0; i < res.length; i++) {
+        polygons.push({
+          path:  res[i].area,
+
+        });
+      }
+      this.markers = markers;
+      this.windows = windows;
+      this.polygons = polygons;
+    })
+
+  },
+  methods: {
+
+
+    //tianditu
+
+    // 获取时间
+    getDateTime() {
+      setInterval(() => {
+        this.dataTime.dateYear = formatTime(new Date(), 'yyyy-MM-dd');
+        this.dataTime.dateWeek = this.dataTime.weekday[new Date().getDay()];
+        this.dataTime.dateDay = formatTime(new Date(), 'HH: mm: ss');
+      }, 1000)
+    },
+    menuTree(){
+      this.reFresh= false
+      this.$nextTick(()=>{
+        this.reFresh = true
+      })
+    },
+    // 获取天气
+    requestGetWeather() {
+      $.get({
+        //这里的url不能写到data对象的外面
+        url: 'https://api.asilu.com/weather_v2/',
+        dataType: 'jsonp',  // 请求方式为jsonp
+        success: (data) => {
+          if (data.status === '1') {
+            let currTime = new Date().getHours();
+            let dailyForecast = data.forecasts[0].casts[0];
+            let city = data.forecasts[0].city;
+            let daytemp = dailyForecast.daytemp + '℃';
+            let nighttemp = dailyForecast.nighttemp + '℃';
+            let weathertemp = '';
+            let peraturetemp = '';
+            if ((currTime >= 6) && (currTime < 18)) {
+              weathertemp = dailyForecast.dayweather;
+              peraturetemp = dailyForecast.nighttemp + "℃~" + dailyForecast.daytemp + "℃";
+            } else {
+              weathertemp = dailyForecast.nightweather;
+              peraturetemp = dailyForecast.daytemp + "℃~" + dailyForecast.nighttemp + "℃";
+            }
+            let icontemp = 'https://cdn.heweather.com/cond_icon/' + weatherOption.weatherCode[weathertemp] + '.png';
+            this.dataWeather = {city, daytemp, nighttemp, weathertemp, peraturetemp, icontemp}
+          }
+        }
+      })
+    },
+
+    cancelLoading() {
+      setTimeout(() => {
+        this.loading = false;
+      }, 500);
+    },
+    mapClick(data) {
+      this.areaData = data;
+    },
+    backClick(data) {
+      this.areaData = data;
+    },
+  }
+  ,
+  comments:{
+    serviceDialog
+  }
+};
+</script>
+
+<style lang="scss">
+@import '../../assets/scss/index';
+</style>
+<style lang="scss" scoped>
+
+#index {
+  .dv-border-box-10, .dv-border-box-12, .dv-border-box-13, {
+    height: inherit;
+  }
+
+  .dataweather {
+    z-index: 999;
+    position: absolute;
+    top: .2rem;
+    left: 1.1rem;
+    font-size: .22rem;
+    color: #fff;
+
+    img {
+      width: .3rem;
+      height: .3rem;
+      filter: brightness(3);
+      vertical-align: bottom;
+    }
+  }
+
+  .datatime {
+    z-index: 999;
+    position: absolute;
+    top: .2rem;
+    right: 1.1rem;
+    font-size: .22rem;
+    color: #fff;
+  }
+
+  .topNumber {
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center
+  }
+
+
+
+}
+
+</style>
